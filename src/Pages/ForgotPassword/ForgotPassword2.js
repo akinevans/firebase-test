@@ -15,6 +15,9 @@ export default function ForgotPassword2() {
       <div className='forgot-password-page-inner-wrapper flex flex-col justify-center items-center w-[100%] h-[100%]'>
         <div className='content-wrapper flex flex-col gap-[24px] max-w-[420px] w-[52%] mt-[264px]'>
           <h1 className='font-Poppins font-semibold w-[100%] text-[40px] leading-[54px] text-center text-black'>
+            Firebase test
+          </h1>
+          <h1 className='font-Poppins font-semibold w-[100%] text-[40px] leading-[54px] text-center text-black'>
             Check Your Email
           </h1>
           <p className='mt-[-10px] font-Poppins font-normal text-[16px] leading-[24px] text-black text-center'>
