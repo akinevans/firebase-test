@@ -15,6 +15,7 @@ import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+//^ Note, firebase API key is OK to share, its used only to recognize your app
 const firebaseConfig = {
   apiKey: "AIzaSyDgrOgukT6wjoioWX7wgVi9XzNlvp3FGqg",
   authDomain: "fir-login-test-aabe2.firebaseapp.com",
