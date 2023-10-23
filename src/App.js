@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 
-function App() {
+// import Landing from "./Pages/Landing/Landing";
+import Login from "./Pages/Login/Login";
+
+import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import ForgotPassword2 from "./Pages/ForgotPassword/ForgotPassword2";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
+import ErrorPage from "./Pages/ErrorPage/ErrorPage";
+import "./index.css";
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      {/* <Route path='/' element={<Landing />} /> */}
+      <Route path='/login' element={<Login />} />
+
+      <Route path='/forgot-password' element={<ForgotPassword />} />
+      <Route path='/forgot-password-2' element={<ForgotPassword2 />} />
+      <Route path='/reset-password' element={<ResetPassword />} />
+      <Route path='*' element={<ErrorPage />} />
+    </Routes>
   );
 }
-
-export default App;
