@@ -33,6 +33,9 @@ const analytics = getAnalytics(app);
 export default function App() {
   return (
     <Routes>
+      <div className=''>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit, quis.
+      </div>
       {/* <Route path='/' element={<Landing />} /> */}
       <Route path='/login' element={<Login />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
