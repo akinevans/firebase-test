@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home/Home";
 import Login from "./Pages/Login/Login";
 import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
 import ForgotPassword2 from "./Pages/ForgotPassword/ForgotPassword2";
@@ -33,10 +34,7 @@ const analytics = getAnalytics(app);
 export default function App() {
   return (
     <Routes>
-      <div className=''>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit, quis.
-      </div>
-      {/* <Route path='/' element={<Landing />} /> */}
+      <Route path='/' element={<Home />} />
       <Route path='/login' element={<Login />} />
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route path='/forgot-password-2' element={<ForgotPassword2 />} />
