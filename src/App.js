@@ -6,6 +6,7 @@ import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
 import ForgotPassword2 from "./Pages/ForgotPassword/ForgotPassword2";
 import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 import ErrorPage from "./Pages/ErrorPage/ErrorPage";
+import Signup from "./Pages/Signup/Signup";
 import "./index.css";
 
 // Import the functions you need from the SDKs you need
@@ -39,6 +40,7 @@ export default function App() {
       <Route path='/forgot-password' element={<ForgotPassword />} />
       <Route path='/forgot-password-2' element={<ForgotPassword2 />} />
       <Route path='/reset-password' element={<ResetPassword />} />
+      <Route path='/signup' element={<Signup />} />
       <Route path='*' element={<ErrorPage />} />
     </Routes>
   );

@@ -5,6 +5,9 @@ export default function Home() {
   return (
     <div className='flex flex-col justify-center items-center h-[200px]'>
       <h1 className='text-[30px]'>Home Page...</h1>
+      <Link to='/signup' className='text-blue-600'>
+        Sign Up
+      </Link>
       <Link to='/login' className='text-blue-600'>
         Login
       </Link>
