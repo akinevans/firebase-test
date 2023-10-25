@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoginHeader from "../../Components/Login_Signup/LoginHeader";
-// import google from "../../Assets/Icons/google-logo.svg";
-// import eye from "../../Assets/Icons/password-eye.svg";
-// import { safari_input_styling } from "../../Components/Styles/Safari_Input_Styling";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = () => {
   const [passEyeVisible, setPassEyeVisible] = useState(false);
   //passTextSize - true renders text at 24px, false at 16px
   const [passTextSize, setPassTextSize] = useState(false);
-
   const [confirmEyeVisible, setConfirmEyeVisible] = useState(false);
-
   //confirmPassTextSize - true renders text at 24px, false at 16px
   const [confirmPassTextSize, setConfirmPassTextSize] = useState(false);
 
@@ -23,7 +19,23 @@ const Signup = () => {
     const pass = document.getElementById("passwordInput"),
       confirmPass = document.getElementById("confirmPassword"),
       passEye = document.getElementById("passwordEye"),
-      passConfirmEye = document.getElementById("confirmPasswordEye");
+      passConfirmEye = document.getElementById("confirmPasswordEye"),
+      email = document.getElementById("email").value,
+      password = document.getElementById("passwordInput").value;
+
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        console.log(email + " " + password);
+        const user = userCredential.user;
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
 
     // when password  & confirm password input fields are changed call checkPasswordInput function
     pass.onChange = checkPasswordInput("pass", pass.type);
@@ -105,6 +117,7 @@ const Signup = () => {
             />
             <input
               type='email'
+              id='email'
               placeholder='Your Email'
               required
               className={`w-[100%] py-[10px] px-[16px] font-Poppins font-normal text-[16px] leading-[24px text-[#6C757D] placeholder-[#6C757D] outline outline-[1px] outline-[#CED4DA] rounded-lg  `}
