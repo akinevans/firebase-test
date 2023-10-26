@@ -10,6 +10,7 @@ import {
 
 //TODO: add ability to sign in once user is created
 //TODO: refactor everything inside of useEffect
+//TODO: Work on form input popup logic 'required' and 'incorrect password' etc...
 
 const Signup = () => {
   const [email, setEmail] = useState("");
