@@ -2,18 +2,24 @@ import React, { useEffect, useState } from "react";
 import LoginHeader from "../../Components/Login_Signup/LoginHeader";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  validatePassword,
+} from "firebase/auth";
+
+//TODO: add ability to sign in once user is created
+//TODO: refactor everything inside of useEffect
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [passEyeVisible, setPassEyeVisible] = useState(false);
   const [confirmEyeVisible, setConfirmEyeVisible] = useState(false);
 
-  //passTextSize - true renders text at 24px, false at 16px
+  // true renders text at 24px, false at 16px
   const [passTextSize, setPassTextSize] = useState(false);
-  //confirmPassTextSize - true renders text at 24px, false at 16px
   const [confirmPassTextSize, setConfirmPassTextSize] = useState(false);
 
   const navigate = useNavigate();
@@ -21,107 +27,97 @@ const Signup = () => {
   // Error state styling for incorrect form inputs
   const errorStyling = "text-[#c9324e] outline-[2px] outline-[#c9324e]";
 
-  const signupUser = (e) => {
-    console.log("in onLogin function");
+  // Sign up a new user with firebase
+  const signupNewUser = (e) => {
     e.preventDefault();
-    const auth = getAuth();
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        console.log(email + " " + password);
-        const user = userCredential.user;
-        navigate("/");
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
-      });
+    //& validate password login
+    if (validatePasswords(password, confirmPassword)) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          alert("Successfully created user!");
+          navigate("/login");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          // ..
+        });
+    } else {
+      console.log("passwords don't match");
+      alert("passwords do not match");
+    }
   };
 
-  // get the value of the input field for password and confirm password, then validate inputs to ensure they match
+  const validatePasswords = (passwordValue, confirmPasswordValue) => {
+    if (passwordValue !== confirmPasswordValue) {
+      return false;
+    }
+    return true;
+  };
+
+  // get the value of the input fields for password and confirm password,
   useEffect(() => {
-    const pass = document.getElementById("passwordInput"),
-      confirmPass = document.getElementById("confirmPassword"),
+    const passwordInput = document.getElementById("passwordInput"),
+      confirmPasswordInput = document.getElementById("confirmPassword"),
       passEye = document.getElementById("passwordEye"),
       passConfirmEye = document.getElementById("confirmPasswordEye");
 
-    // const auth = getAuth();
-
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed up
-    //     console.log(email + " " + password);
-    //     const user = userCredential.user;
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log(errorCode, errorMessage);
-    //     // ..
-    //   });
-
     // when password  & confirm password input fields are changed call checkPasswordInput function
-    pass.onChange = checkPasswordInput("pass", pass.type);
-    confirmPass.onChange = checkPasswordInput("confirm-pass", confirmPass.type);
+    passwordInput.onChange = checkPasswordInput(
+      "passwordInput",
+      passwordInput.type
+    );
+    confirmPasswordInput.onChange = checkPasswordInput(
+      "confirm-passwordInput",
+      confirmPasswordInput.type
+    );
 
     // When the eye icon is clicked, password visibility will toggle
     passEye.onclick = triggerPasswordTextVisibility;
     passConfirmEye.onclick = triggerConfirmTextVisibility;
 
     function triggerPasswordTextVisibility() {
-      if (pass.type === "password") {
-        pass.type = "text";
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
         setPassTextSize(false);
       } else {
-        pass.type = "password";
+        passwordInput.type = "password";
         setPassTextSize(true);
       }
       return;
     }
 
     function triggerConfirmTextVisibility() {
-      if (confirmPass.type === "password") {
-        confirmPass.type = "text";
+      if (confirmPasswordInput.type === "password") {
+        confirmPasswordInput.type = "text";
         setConfirmPassTextSize(false);
       } else {
-        confirmPass.type = "password";
+        confirmPasswordInput.type = "password";
         setConfirmPassTextSize(true);
       }
       return;
     }
 
     function checkPasswordInput(field, inputType) {
-      if (field === "pass" && inputType === "password") {
+      if (field === "passwordInput" && inputType === "password") {
         setPassEyeVisible(true);
         setPassTextSize(true);
-      } else if (field === "confirm-pass" && inputType === "password") {
+      } else if (
+        field === "confirm-passwordInput" &&
+        inputType === "password"
+      ) {
         setConfirmEyeVisible(true);
         setConfirmPassTextSize(true);
       }
     }
 
-    function validatePassword() {
-      // console.log("pass value: " + pass.value);
-      // console.log("confirm pass value: " + confirmPass.value);
-      // console.log(typeof confirmPass.value);
-
-      if (confirmPass.value !== pass.value) {
-        confirmPass.setCustomValidity("Your password does not match.");
-        // console.log("passwords do not match");
-      } else {
-        confirmPass.setCustomValidity("");
-        // console.log("passwords match");
-      }
-      return;
-    }
-
-    pass.onchange = validatePassword;
-    confirmPass.onchange = validatePassword;
+    // passwordInput.onchange = validatePassword;
+    // confirmPasswordInput.onchange = validatePassword;
   });
 
   return (
@@ -194,10 +190,7 @@ const Signup = () => {
                 className={`w-[100%] py-[10px] px-[16px] font-Poppins font-normal text-[16px] leading-[24px text-[#6C757D] placeholder-[#6C757D] outline outline-[1px] outline-[#CED4DA] rounded-lg placeholder:text-[16px] ${
                   confirmPassTextSize ? "text-[24px] py-[3.6px]" : ""
                 }  `}
-                onChange={() => {
-                  //get the value of the input field.
-                  // checkPasswordInput("confirm-pass");
-                }}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
               {/* //! add state to trigger password error messages (Firebase may help with this) */}
 
@@ -219,9 +212,9 @@ const Signup = () => {
               <div className='checkbox-and-label-wrapper'>
                 <input
                   type='checkbox'
-                  id='remember-me'
-                  name='remember-me'
-                  value='Remember Me'
+                  id='checkbox'
+                  name='terms'
+                  value=''
                   className='w-[16px] h-[16px] mr-[8px] rounded-lg cursor-pointer'
                 />
                 <label
@@ -239,11 +232,12 @@ const Signup = () => {
                 Terms and Conditions
               </Link>
             </div>
+            {/* //& submit button */}
             <input
               type='submit'
               value='Sign Up'
               className={`w-[100%] h-[48px] mb-[24px] font-Poppins font-medium text-[16px] text-white text-center leading-[24px] bg-[#556AEB] rounded-lg cursor-pointer `}
-              onClick={signupUser}
+              onClick={signupNewUser}
             />
           </form>
 
