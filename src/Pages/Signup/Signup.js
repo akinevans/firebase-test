@@ -1,41 +1,69 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import LoginHeader from "../../Components/Login_Signup/LoginHeader";
+import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [passEyeVisible, setPassEyeVisible] = useState(false);
+  const [confirmEyeVisible, setConfirmEyeVisible] = useState(false);
+
   //passTextSize - true renders text at 24px, false at 16px
   const [passTextSize, setPassTextSize] = useState(false);
-  const [confirmEyeVisible, setConfirmEyeVisible] = useState(false);
   //confirmPassTextSize - true renders text at 24px, false at 16px
   const [confirmPassTextSize, setConfirmPassTextSize] = useState(false);
 
+  const navigate = useNavigate();
+
   // Error state styling for incorrect form inputs
   const errorStyling = "text-[#c9324e] outline-[2px] outline-[#c9324e]";
+
+  const signupUser = (e) => {
+    console.log("in onLogin function");
+    e.preventDefault();
+    const auth = getAuth();
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        console.log(email + " " + password);
+        const user = userCredential.user;
+        navigate("/");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        // ..
+      });
+  };
 
   // get the value of the input field for password and confirm password, then validate inputs to ensure they match
   useEffect(() => {
     const pass = document.getElementById("passwordInput"),
       confirmPass = document.getElementById("confirmPassword"),
       passEye = document.getElementById("passwordEye"),
-      passConfirmEye = document.getElementById("confirmPasswordEye"),
-      email = document.getElementById("email").value,
-      password = document.getElementById("passwordInput").value;
+      passConfirmEye = document.getElementById("confirmPasswordEye");
 
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        console.log(email + " " + password);
-        const user = userCredential.user;
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+    // const auth = getAuth();
+
+    // createUserWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     // Signed up
+    //     console.log(email + " " + password);
+    //     const user = userCredential.user;
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //     console.log(errorCode, errorMessage);
+    //     // ..
+    //   });
 
     // when password  & confirm password input fields are changed call checkPasswordInput function
     pass.onChange = checkPasswordInput("pass", pass.type);
@@ -120,6 +148,7 @@ const Signup = () => {
               id='email'
               placeholder='Your Email'
               required
+              onChange={(e) => setEmail(e.target.value)}
               className={`w-[100%] py-[10px] px-[16px] font-Poppins font-normal text-[16px] leading-[24px text-[#6C757D] placeholder-[#6C757D] outline outline-[1px] outline-[#CED4DA] rounded-lg  `}
             />
             {/* //! add state to trigger required error message */}
@@ -133,13 +162,10 @@ const Signup = () => {
                 required
                 minLength={6}
                 placeholder='Create Password'
+                onChange={(e) => setPassword(e.target.value)}
                 className={`w-[100%] py-[10px] px-[16px] font-Poppins font-normal text-[16px] leading-[24px text-[#6C757D] placeholder-[#6C757D] outline outline-[1px] outline-[#CED4DA] rounded-lg placeholder:text-[16px]  ${
                   passTextSize ? " text-[24px] py-[3.6px] " : ""
                 }  `}
-                onChange={() => {
-                  //get the value of the input field.
-                  // checkPasswordInput("pass");
-                }}
               />
               {/* //! add state to trigger password error messages (Firebase may help with this) */}
 
@@ -217,6 +243,7 @@ const Signup = () => {
               type='submit'
               value='Sign Up'
               className={`w-[100%] h-[48px] mb-[24px] font-Poppins font-medium text-[16px] text-white text-center leading-[24px] bg-[#556AEB] rounded-lg cursor-pointer `}
+              onClick={signupUser}
             />
           </form>
 
