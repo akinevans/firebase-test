@@ -18,6 +18,7 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passEyeVisible, setPassEyeVisible] = useState(false);
   const [confirmEyeVisible, setConfirmEyeVisible] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const [emailError, setEmailError] = useState(false);
 
@@ -36,25 +37,27 @@ const Signup = () => {
 
     //! TODO: implement actual email validation
     if (validateEmail(email)) {
-      //& validate password login
-      if (validatePasswords(password, confirmPassword)) {
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log(user);
-            alert("Successfully created user!");
-            navigate("/login");
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-            // ..
-          });
-      } else {
-        console.log("passwords don't match");
-        alert("passwords do not match");
+      if (termsAccepted) {
+        //& validate password login
+        if (validatePasswords(password, confirmPassword)) {
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              // Signed in
+              const user = userCredential.user;
+              console.log(user);
+              alert("Successfully created user!");
+              navigate("/login");
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log(errorCode, errorMessage);
+              // ..
+            });
+        } else {
+          console.log("passwords don't match");
+          alert("passwords do not match");
+        }
       }
     }
   };
@@ -236,6 +239,10 @@ const Signup = () => {
                   name='terms'
                   value='checkbox'
                   required
+                  checked={termsAccepted}
+                  onClick={() => {
+                    setTermsAccepted(!termsAccepted);
+                  }}
                   className='w-[16px] h-[16px] mr-[8px] rounded-lg cursor-pointer'
                 />
                 <label
@@ -247,7 +254,7 @@ const Signup = () => {
                 </label>
               </div>
               <Link
-                to='/terms-and-conditions'
+                to='/terms'
                 target='_blank'
                 className='font-Poppins font-medium text-[#556AEB] text-[16px] text-center leading-[24px] underline'
               >
