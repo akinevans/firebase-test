@@ -9,7 +9,7 @@ import {
 } from "firebase/auth";
 
 //TODO: add ability to sign in once user is created
-//TODO: refactor everything inside of useEffect
+//TODO refactor everything inside of useEffect
 //TODO: Work on form input popup logic 'required' and 'incorrect password' etc...
 
 const Signup = () => {
@@ -19,6 +19,8 @@ const Signup = () => {
   const [passEyeVisible, setPassEyeVisible] = useState(false);
   const [confirmEyeVisible, setConfirmEyeVisible] = useState(false);
 
+  const [emailError, setEmailError] = useState(false);
+
   // true renders text at 24px, false at 16px
   const [passTextSize, setPassTextSize] = useState(false);
   const [confirmPassTextSize, setConfirmPassTextSize] = useState(false);
@@ -26,38 +28,51 @@ const Signup = () => {
   const navigate = useNavigate();
 
   // Error state styling for incorrect form inputs
-  const errorStyling = "text-[#c9324e] outline-[2px] outline-[#c9324e]";
+  const errorStyling = " text-[#c9324e] outline-[2px] outline-[#c9324e] ";
 
   // Sign up a new user with firebase
   const signupNewUser = (e) => {
     e.preventDefault();
 
-    //& validate password login
-    if (validatePasswords(password, confirmPassword)) {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log(user);
-          alert("Successfully created user!");
-          navigate("/login");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage);
-          // ..
-        });
-    } else {
-      console.log("passwords don't match");
-      alert("passwords do not match");
+    //! TODO: implement actual email validation
+    if (validateEmail(email)) {
+      //& validate password login
+      if (validatePasswords(password, confirmPassword)) {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            alert("Successfully created user!");
+            navigate("/login");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            // ..
+          });
+      } else {
+        console.log("passwords don't match");
+        alert("passwords do not match");
+      }
     }
   };
 
+  //! TODO: implement actual password validation
   const validatePasswords = (passwordValue, confirmPasswordValue) => {
     if (passwordValue !== confirmPasswordValue) {
       return false;
     }
+    return true;
+  };
+
+  const validateEmail = (email) => {
+    if (email === "") {
+      setEmailError(true);
+      return false;
+    }
+    setEmailError(false);
     return true;
   };
 
@@ -149,7 +164,11 @@ const Signup = () => {
               className={`w-[100%] py-[10px] px-[16px] font-Poppins font-normal text-[16px] leading-[24px text-[#6C757D] placeholder-[#6C757D] outline outline-[1px] outline-[#CED4DA] rounded-lg  `}
             />
             {/* //! add state to trigger required error message */}
-            <p className='hidden mt-[-20px] font-Poppins font-normal text-[14px] text-[#c9324e] leading-[21px]'>
+            <p
+              className={`mt-[-20px] font-Poppins font-normal text-[14px] text-[#c9324e] leading-[21px] ${
+                emailError ? errorStyling : "hidden"
+              }`}
+            >
               This field is required
             </p>
             <div className='password-input-wrapper relative'>
