@@ -37,9 +37,8 @@ const Signup = () => {
 
     //! TODO: implement actual email validation
     if (validateEmail(email)) {
-      if (termsAccepted) {
-        //& validate password login
-        if (validatePasswords(password, confirmPassword)) {
+      if (validatePasswords(password, confirmPassword)) {
+        if (termsAccepted) {
           createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
               // Signed in
@@ -55,20 +54,28 @@ const Signup = () => {
               // ..
             });
         } else {
-          console.log("passwords don't match");
-          alert("passwords do not match");
+          console.log("Terms not accepted");
+          alert("Terms and Conditions my be accepted to continue");
         }
+      } else {
+        console.log("passwords don't match");
+        alert("passwords do not match");
       }
+    } else {
+      console.log("must enter email");
+      alert("must enter email");
     }
   };
 
   //! TODO: implement actual password validation
   const validatePasswords = (passwordValue, confirmPasswordValue) => {
-    if (passwordValue !== confirmPasswordValue) {
+    if (passwordValue !== confirmPasswordValue || passwordValue === "") {
       return false;
     }
     return true;
   };
+
+  //! TODO: implement actual email validation
 
   const validateEmail = (email) => {
     if (email === "") {
