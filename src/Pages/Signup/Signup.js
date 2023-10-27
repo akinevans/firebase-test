@@ -234,7 +234,8 @@ const Signup = () => {
                   type='checkbox'
                   id='checkbox'
                   name='terms'
-                  value=''
+                  value='checkbox'
+                  required
                   className='w-[16px] h-[16px] mr-[8px] rounded-lg cursor-pointer'
                 />
                 <label
@@ -246,7 +247,8 @@ const Signup = () => {
                 </label>
               </div>
               <Link
-                to='/terms'
+                to='/terms-and-conditions'
+                target='_blank'
                 className='font-Poppins font-medium text-[#556AEB] text-[16px] text-center leading-[24px] underline'
               >
                 Terms and Conditions
